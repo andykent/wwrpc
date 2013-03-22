@@ -1,15 +1,13 @@
 class WWRPC.Worker
-  constructor: (@protocol) ->
-    console.log(@protocol)
+  constructor: (@protocol, @context=this) ->
     @blob = new Blob([@protocol.workerCode()], { "type" : "text/javascript" })
     @start()
 
   process: (data) ->
-    console.log "processing..."
     console.log data
     switch data.action
       when 'wwrpc:call'
-        @protocol.call(data.name, data.args, @buildCallback(data.callbackId))
+        @protocol.call(data.name, @context, data.args, @buildCallback(data.callbackId))
 
   buildCallback: (id) ->
     return null if id is null

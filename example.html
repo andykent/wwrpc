@@ -7,18 +7,20 @@
       console: {
         log: WWRPC.remote(function(msg) { console.log(msg) })
       },
-      remoteHello: WWRPC.remote(function(name) { console.log("Hello "+name); }),
+      remoteHello: WWRPC.remote(function() { console.log("Hello "+this.name); }),
       localHello: WWRPC.local(function(name) { console.log("Hello "+name); }),
       json: {
         get: WWRPC.remote(function(url, done) { done({example:true}) }),
       }
     });
 
-    var worker = WWRPC.spawnWorker(protocol);
+    var context = {name: 'andy'}
+
+    var worker = WWRPC.spawnWorker(protocol, context);
 
     worker.loadCode(function() {
       localHello('andy');
-      remoteHello('andy');
+      remoteHello();
       json.get('http://url.com', function(data) {
         console.log(data);
       });

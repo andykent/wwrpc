@@ -20,10 +20,10 @@ class WWRPC.Protocol
     return @processLeaf(value, context) if typeof value is 'object'
     value
 
-  call: (name, args, callback=null) ->
+  call: (name, context, args, callback=null) ->
     fn = @findFn(name)
     throw new Error("Undefined RPC function #{name} called.") unless fn
-    fn.run(args, callback)
+    fn.run(context, args, callback)
 
   findFn: (name) ->
     parts = name.split('.')
@@ -33,9 +33,9 @@ class WWRPC.Protocol
 
 class WWRPC.RemoteFunction
   constructor: (@fn) -> null
-  run: (args, callback) ->
+  run: (context, args, callback) ->
     args.push(callback) unless callback is null
-    @fn.apply(this, args)
+    @fn.apply(context, args)
   toRpcString: (context) ->
     """function() { __bridge__.call('#{context.join('.')}', Array.prototype.slice.apply(arguments)); }"""
 
