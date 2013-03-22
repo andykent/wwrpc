@@ -1,0 +1,36 @@
+<html>
+<head>
+  <title>WWRPC Example</title>
+  <script type="text/javascript" src="lib/wwrpc.js"></script>
+  <script type="text/javascript">
+    var protocol = WWRPC.defineProtocol({
+      console: {
+        log: WWRPC.remote(function(msg) { console.log(msg) })
+      },
+      remoteHello: WWRPC.remote(function(name) { console.log("Hello "+name); }),
+      localHello: WWRPC.local(function(name) { console.log("Hello "+name); }),
+      json: {
+        get: WWRPC.remote(function(url, done) { done({example:true}) }),
+      }
+    });
+
+    var worker = WWRPC.spawnWorker(protocol);
+
+    worker.loadCode(function() {
+      localHello('andy');
+      remoteHello('andy');
+      json.get('http://url.com', function(data) {
+        console.log(data);
+      });
+    });
+
+    // worker.on('alldone', function() { console.log('worker is all done now')});
+
+    // worker.trigger('dostuff');
+
+  </script>
+</head>
+<body>
+
+</body>
+</html>
