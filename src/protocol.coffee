@@ -1,23 +1,25 @@
 class WWRPC.Protocol
   constructor: (@template) ->
 
-  workerCode: ->
-    data = JSON.stringify(@process(@template))
+  workerCode: (context) ->
+    data = JSON.stringify(@process(@template, context))
     """
       #{WWRPC.bridgeCode('__bridge__')}
       __bridge__.unpack(#{data}, self);
       __bridge__.init();
     """
 
-  processLeaf: (leaf, context=[]) ->
+  processLeaf: (leaf, context, tree=[]) ->
     o = {}
-    o[key] = @process(value, context.concat([key])) for key, value of leaf
+    o[key] = @process(value, context, tree.concat([key])) for key, value of leaf
+    console.log o
     o
 
-  process: (value, context=[]) ->
-    return value.toRpcString(context) if value.constructor is WWRPC.RemoteFunction
-    return value.toRpcString(context) if value.constructor is WWRPC.LocalFunction
-    return @processLeaf(value, context) if typeof value is 'object'
+  process: (value, context, tree=[]) ->
+    return value.resultForContext(context) if value.constructor is WWRPC.PassFunction
+    return value.toRpcString(tree) if value.constructor is WWRPC.RemoteFunction
+    return value.toRpcString(tree) if value.constructor is WWRPC.LocalFunction
+    return @processLeaf(value, context, tree) if typeof value is 'object'
     value
 
   call: (name, context, args, callback=null) ->
@@ -43,5 +45,10 @@ class WWRPC.RemoteFunction
 class WWRPC.LocalFunction
   constructor: (@fn) -> null
   toRpcString: (context) -> @fn.toString()
+
+
+class WWRPC.PassFunction
+  constructor: (@fn) -> null
+  resultForContext: (context) -> @fn.apply(context, context)
 
 

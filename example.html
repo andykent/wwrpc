@@ -7,6 +7,7 @@
       console: {
         log: WWRPC.remote(function(msg) { console.log(msg) })
       },
+      localName: WWRPC.pass(function() { console.log('PASS', this); return this.name }),
       remoteHello: WWRPC.remote(function() { console.log("Hello "+this.name); }),
       localHello: WWRPC.local(function(name) { console.log("Hello "+name); }),
       json: {
@@ -21,6 +22,7 @@
     worker.loadCode(function() {
       localHello('andy');
       remoteHello();
+      console.log(localName);
       json.get('http://url.com', function(data) {
         console.log(data);
       });

@@ -5,5 +5,6 @@ WWRPC.spawnWorker = (protocol, context) -> new WWRPC.Worker(protocol, context)
 
 WWRPC.remote = (fn) -> new WWRPC.RemoteFunction(fn)
 WWRPC.local = (fn) -> new WWRPC.LocalFunction(fn)
+WWRPC.pass = (fn) -> new WWRPC.PassFunction(fn)
 
 WWRPC.bridgeCode = (name) -> """var #{name} = (#{WWRPC.BRIDGE.toString()})();"""

@@ -1,6 +1,6 @@
 class WWRPC.Worker
-  constructor: (@protocol, @context=this) ->
-    @blob = new Blob([@protocol.workerCode()], { "type" : "text/javascript" })
+  constructor: (@protocol, @context={}) ->
+    @blob = new Blob([@protocol.workerCode(@context)], { "type" : "text/javascript" })
     @start()
 
   process: (data) ->
