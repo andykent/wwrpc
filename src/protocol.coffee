@@ -12,7 +12,6 @@ class WWRPC.Protocol
   processLeaf: (leaf, context, tree=[]) ->
     o = {}
     o[key] = @process(value, context, tree.concat([key])) for key, value of leaf
-    console.log o
     o
 
   process: (value, context, tree=[]) ->

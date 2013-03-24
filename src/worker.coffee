@@ -4,7 +4,6 @@ class WWRPC.Worker
     @start()
 
   process: (data) ->
-    console.log data
     switch data.action
       when 'wwrpc:call'
         @protocol.call(data.name, @context, data.args, @buildCallback(data.callbackId))
@@ -30,5 +29,4 @@ class WWRPC.Worker
     @worker.addEventListener('message', (e) => @process(e.data))
 
   loadCode: (code) ->
-    console.log "loading code", code.toString()
     @worker.postMessage(action:'wwrpc:run', code:code.toString())
