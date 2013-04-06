@@ -25,8 +25,13 @@ class WWRPC.Worker
   trigger: (eventName) ->
 
   start: ->
-    @worker = new window.Worker(window.URL.createObjectURL(@blob))
+    @worker = new window.Worker(@blobURL())
     @worker.addEventListener('message', (e) => @process(e.data))
 
   loadCode: (code) ->
     @worker.postMessage(action:'wwrpc:run', code:code.toString())
+
+  blobURL: ->
+   fn = window.URL.createObjectURL if window.URL
+   fn = window.webkitURL.createObjectURL if window.webkitURL
+   fn(@blob)
