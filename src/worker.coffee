@@ -32,6 +32,7 @@ class WWRPC.Worker
     @worker.postMessage(action:'wwrpc:run', code:code.toString())
 
   blobURL: ->
-   fn = window.URL.createObjectURL if window.URL
-   fn = window.webkitURL.createObjectURL if window.webkitURL
-   fn(@blob)
+    if window.URL
+      window.URL.createObjectURL(@blob)
+    else
+      window.webkitURL.createObjectURL(@blob)
