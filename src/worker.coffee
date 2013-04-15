@@ -11,6 +11,7 @@ class WWRPC.Worker
   buildCallback: (id) ->
     return null if id is null
     =>
+      return unless @worker
       @worker.postMessage
         action: 'wwrpc:callback'
         callbackId: id
